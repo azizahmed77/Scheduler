@@ -1,59 +1,60 @@
-var hour9 = $("#9");
-var hour10 = $("#10");
-var hour11 = $("#11");
-var hour12 = $("#12");
-var hour1 = $("#1");
-var hour2 = $("#2");
-var hour3 = $("#3");
-var hour4 = $("#4");
-var hour5 = $("#5");
-var time = moment();
 
+let saveBtn = $(".saveBtn");
+var currentTime = moment().hour();
+
+
+// loads time and schedule items
 
 function setSchedule() {
 
     $("#currentDay").text(moment().format("dddd, MMMM Do YYYY"));
 
     $(".time-block").each(function () {
-        var id = $(this).attr("id");
-        var schedule = localStorage.getItem(id);
+        let id = $(this).attr("id");
+        let data = localStorage.getItem(id);
 
-        if (schedule !== null) {
-            $(this).children(".schedule").val(schedule);
+        if (data !== null) {
+            $(this).children(".data").val(data);
         }
     });
 };
 
-setSchedule();
-
-
-function pastPresentFuture() {
-    hour = time.hours();
-    $(".time-block").each(function () {
-        var thisHour = parseInt($(this).attr("id"));
-
-        if (thisHour > hour) {
-            $(this).addClass("future")
-        }
-        else if (thisHour === hour) {
-            $(this).addClass("present");
-        }
-        else {
-            $(this).addClass("past");
-        }
-    })
-}
-
-pastPresentFuture();
-
-var saveBtn = $(".saveBtn");
+// saves schedule items
 
 saveBtn.on("click", function () {
-    var time = $(this).parent().attr("id");
-    var schedule = $(this).siblings(".schedule").val();
+    let time = $(this).parent().attr("id");
+    let data = $(this).siblings(".data").val();
 
-    localStorage.setItem(time, schedule);
+    localStorage.setItem(time, data);
 });
 
 
+
+function timeTracker() {
+  
+
+    // loop over time blocks
+    $(".time-block").each(function () {
+        var blockTime = parseInt($(this).attr("id"));
+
+        switch (true) {
+            case (blockTime < currentTime):
+                $(this).addClass("past");
+                break;
+
+            case (blockTime === currentTime):
+                $(this).addClass("present");
+                break;
+
+            default:
+                $(this).addClass("future");
+        }
+    })
+};
+
+
+
+
+setSchedule();
+timeTracker();
 
